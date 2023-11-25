@@ -1,0 +1,7 @@
+.terraform
+*.tfvars
+*.lock.hcl
+*.tfstate
+*.tfstate.backup
+hosts.yml
+*.pem

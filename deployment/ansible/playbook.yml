@@ -1,0 +1,37 @@
+- hosts: web-server
+  tasks:
+
+    - name: Update apt repo and cache  
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=360
+      become: yes
+
+    - name: Install nodejs and npm 
+      apt:                       
+        pkg:
+        - nodejs
+        - npm
+      become: yes
+
+    - name: Copy src
+      copy:
+        src: ./../src
+        dest: /home/ubuntu/webserver
+      become: yes
+
+    - name: Copy package.json
+      copy:
+        src: ./../package.json
+        dest: /home/ubuntu/webserver
+      become: yes
+
+    - name: Run npm install
+      shell: rm -rf node_modules package-lock.json | npm install 
+      args:
+        chdir: /home/ubuntu/webserver
+      become: yes
+
+    - name: start webserver
+      shell: fuser 8000/tcp -k | npm start &
+      args:
+        chdir: /home/ubuntu/webserver
+      become: yes
